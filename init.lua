@@ -337,6 +337,7 @@ local function protect_area(pos, dir, height, width, owner)
 		areas:save()
 		return id
 	end
+	minetest.chat_send_player(owner, errMsg)
 	return nil
 end
 
@@ -449,9 +450,12 @@ minetest.register_node("towercrane:base", {
 			if no_area_violation(owner, pos) then
 				if dir ~= nil then
 					if check_space(table.copy(pos), dir, height, width, owner) then
-						-- add protection area
-						meta:set_int("id", protect_area(table.copy(pos), table.copy(dir), height, width, owner))
+					    -- add protection area
+					    id = protect_area(table.copy(pos), table.copy(dir), height, width, owner)
+					    if id ~= nil then
+						meta:set_int("id", id)
 						construct_crane(table.copy(pos), table.copy(dir), height, width, owner)
+					    end
 					else
 						chat(owner, "area is protected or too less space to raise up the crane!")
 					end
