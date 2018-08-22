@@ -290,8 +290,8 @@ local function construct_crane(pos, dir, height, width, owner)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("dir", minetest.pos_to_string(dir))
 	meta:set_string("owner", owner)
-	meta:set_int("height", height)
-	meta:set_int("width", width)
+	meta:set_int("height", height or 0)
+	meta:set_int("width", width or 0)
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -450,12 +450,9 @@ minetest.register_node("towercrane:base", {
 			if no_area_violation(owner, pos) then
 				if dir ~= nil then
 					if check_space(table.copy(pos), dir, height, width, owner) then
-					    -- add protection area
-					    id = protect_area(table.copy(pos), table.copy(dir), height, width, owner)
-					    if id ~= nil then
-						meta:set_int("id", id)
+						-- add protection area
+						meta:set_int("id", protect_area(table.copy(pos), table.copy(dir), height, width, owner) or 0)
 						construct_crane(table.copy(pos), table.copy(dir), height, width, owner)
-					    end
 					else
 						chat(owner, "area is protected or too less space to raise up the crane!")
 					end
